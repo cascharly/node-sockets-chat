@@ -6,14 +6,18 @@ const usuarios = new Usuarios();
 
 io.on("connection", (client) => {
   client.on("entrarChat", (data, callback) => {
-    if (!data.nombre) {
+    console.log(data);
+
+    if (!data.nombre || !data.sala) {
       return callback({
         error: true,
-        mensaje: "El nombre es necesario",
+        mensaje: "El nombre/sala es necesario",
       });
     }
 
-    let personas = usuarios.agregarPersona(client.id, data.nombre);
+    client.join(data.sala);
+
+    let personas = usuarios.agregarPersona(client.id, data.nombre, data.sala);
 
     client.broadcast.emit("listaPersona", usuarios.getPersonas());
 
@@ -39,6 +43,8 @@ io.on("connection", (client) => {
   //Mensaje privados
   client.on("mensajePrivado", (data) => {
     let persona = usuarios.getPersona(client.id);
-    client.broadcast.to(data.para).emit("mensajePrivado", crearMensaje(persona.nombre, data.mensaje));
+    client.broadcast
+      .to(data.para)
+      .emit("mensajePrivado", crearMensaje(persona.nombre, data.mensaje));
   });
 });
