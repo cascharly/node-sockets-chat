@@ -1,7 +1,7 @@
 var params = new URLSearchParams(window.location.search);
 
 // referencias jQuery
-var divUsuarios = $('#divUsuarios');
+var divUsuarios = $("#divUsuarios");
 
 // Funciones para renderuzar usuarios
 function renderizarUsuarios(personas) {
@@ -27,7 +27,13 @@ function renderizarUsuarios(personas) {
     html += "</li>";
   }
 
-  divUsuarios.html(html)
-  
-  
+  divUsuarios.html(html);
 }
+
+// Listeners
+divUsuarios.on("click", "a", function () {
+  var id = $(this).data("id");
+  if (id) {
+    console.log(id);
+  }
+});
